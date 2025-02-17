@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Interview System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000;
+            overflow: hidden;
+            position: relative;
+        }
+
+        iframe {
+            width: 90%;
+            height: 90vh;
+            border: none;
+            margin: 0;
+        }
+
+        /* Header styling */
+        .header {
+            position: absolute;
+            top: 10px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 10;
+        }
+        .website-name {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        .website-name:hover {
+            color: #ff6ec7;
+        }
+        .account {
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        .account i {
+            margin-right: 8px;
+        }
+        .account:hover {
+            color: #ff6ec7;
+        }
+
+        /* Feature boxes styling */
+        .feature-box {
+            padding: 20px;
+            font-size: 18px;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            position: absolute;
+            width: 300px;
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .feature-box:hover {
+            background: linear-gradient(to right, #ff6ec7, #6a11cb);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-box:active {
+            background: linear-gradient(to right, #ff6ec7, #2575fc);
+            transform: scale(0.98);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-box:focus {
+            outline: none;
+        }
+
+        .feature-box h3 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .feature-box p {
+            margin-top: 10px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        /* Position for each box */
+        .top-left {
+            top: 10%;
+            left: 10%;
+        }
+
+        .top-right {
+            top: 10%;
+            right: 10%;
+        }
+
+        .bottom-left {
+            bottom: 10%;
+            left: 10%;
+        }
+
+        .bottom-right {
+            bottom: 10%;
+            right: 10%;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Header with Website Name and Account -->
+    <div class="header">
+        <div class="website-name" onclick="openWebsite()">
+            AI-powered Interview
+        </div>
+        <div class="account" onclick="openAccount()">
+            <i class="fas fa-user"></i>Account
+        </div>
+    </div>
+
+    <!-- Embed Spline scene inside iframe -->
+    <iframe src="https://my.spline.design/roomgirlworkingcopy-78acac3b1f865c05751f9f0080c63297/" allowfullscreen></iframe>
+
+    <!-- Feature boxes positioned near the four corners of the image -->
+    <div class="feature-box top-left" onclick="openKeyQuest()">
+        <h3>Key Quest</h3>
+        <p>Test your knowledge with this fun and engaging quiz on key concepts.</p>
+    </div>
+    <div class="feature-box top-right" onclick="openResumeATS()">
+        <h3>Resume ATS</h3>
+        <p>Get your resume optimized for ATS with this tool for better job chances.</p>
+    </div>
+    <div class="feature-box bottom-left" onclick="openChatbot()">
+        <h3>Chatbot</h3>
+        <p>Practice interviews with an AI-powered chatbot to boost your confidence!</p>
+    </div>
+    <div class="feature-box bottom-right" onclick="openAptitudeQuiz()">
+        <h3>Aptitude Quiz</h3>
+        <p>Sharpen your skills with this aptitude test designed to challenge your brain.</p>
+    </div>
+
+    <script>
+        // Placeholder functions to simulate opening each section
+        function openWebsite() {
+            alert("Opening the Website..."); // Replace with actual functionality
+        }
+
+        function openKeyQuest() {
+            window.location.href = '/keyquest'; // Replace with actual route
+        }
+
+        function openResumeATS() {
+            window.location.href = '/resume_ats'; // Replace with actual route
+        }
+
+        function openChatbot() {
+            window.location.href = '/chatbot'; // Replace with actual route
+        }
+
+        function openAptitudeQuiz() {
+            window.location.href = '/quiz'; // Replace with actual route
+        }
+
+        function openAccount() {
+            alert("Opening Account..."); // Replace with actual functionality
+        }
+    </script>
+</body>
+</html>

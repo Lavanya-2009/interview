@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz App</title>
+    
+    <style>
+        /* General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5; /* Light gray background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+            flex-direction: column;
+        }
+
+        .container {
+            background: #ffffff; /* White background for quiz container */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            border-radius: 12px;
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+            overflow: hidden;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #2c3e50; /* Dark gray for heading */
+        }
+
+        #quiz-container {
+            max-height: 350px;
+            overflow-y: auto;
+            padding-right: 20px; /* For scroll padding */
+            margin-bottom: 20px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease-in-out;
+        }
+
+        button#submit-btn {
+            background-color: #3498db; /* Professional blue */
+            color: white;
+        }
+
+        button#submit-btn:hover {
+            background-color: #2980b9; /* Darker blue on hover */
+            transform: scale(1.05);
+        }
+
+        button#restart-btn {
+            background-color: #2ecc71; /* Professional green */
+            color: white;
+            opacity: 0.7;
+        }
+
+        button#restart-btn:hover {
+            background-color: #27ae60; /* Darker green on hover */
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        .quiz-question {
+            margin: 20px 0;
+            text-align: left;
+            font-size: 1.1rem;
+            color: #2c3e50; /* Dark gray for text */
+        }
+
+        .quiz-options label {
+            display: block;
+            padding: 10px;
+            background: #ecf0f1; /* Light gray for options */
+            border-radius: 5px;
+            margin: 5px 0;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out;
+        }
+
+        .quiz-options input {
+            margin-right: 10px;
+        }
+
+        .quiz-options input:checked + label {
+            background-color: #3498db; /* Blue when selected */
+            color: white;
+        }
+
+        .quiz-options input:hover + label {
+            background-color: #bdc3c7; /* Light gray hover effect */
+        }
+
+        .quiz-options input:focus + label {
+            outline: 2px solid #3498db; /* Blue focus outline */
+        }
+
+        .correct {
+            background-color: #d4edda; /* Light green for correct answers */
+            border: 1px solid #155724;
+        }
+
+        .wrong {
+            background-color: #f8d7da; /* Light red for wrong answers */
+            border: 1px solid #721c24;
+        }
+
+        #score {
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-top: 15px;
+            color: #34495e; /* Dark gray for score text */
+        }
+
+        /* Header styling */
+        .header {
+            position: absolute;
+            top: 10px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 20px;
+            background-color: #2c3e50;
+            color: white;
+            z-index: 10;
+        }
+
+        .website-name {
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .website-name:hover {
+            color: #ff6ec7;
+        }
+
+        .account {
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .account i {
+            margin-right: 8px;
+        }
+
+        .account:hover {
+            color: #ff6ec7;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Website Name and Account -->
+    <div class="header">
+        <div class="website-name" onclick="openWebsite()">
+            AI-powered Interview
+        </div>
+        <div class="account" onclick="openAccount()">
+            <i class="fas fa-user"></i>Account
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Aptitude Quiz</h1>
+        
+        <div id="quiz-container"></div>
+        <p id="score"></p>
+        
+        <button id="submit-btn" onclick="submitQuiz()">Submit</button>
+        <button id="restart-btn" onclick="restartQuiz()" disabled>Restart</button>
+    </div>
+
+    <script>
+        let questions = [];
+        let quizSubmitted = false;
+        let numberOfQuestions = 5; // Default number of questions to ask (can be adjusted)
+
+        // Ask user for the number of questions
+        function askNumberOfQuestions() {
+            let number = prompt("How many questions would you like to answer?", "5");
+            number = parseInt(number, 10);
+
+            if (isNaN(number) || number <= 0) {
+                alert("Please enter a valid number.");
+                askNumberOfQuestions(); // Retry if the input is invalid
+            } else {
+                numberOfQuestions = number;
+                loadQuiz(); // Load quiz after getting the number of questions
+            }
+        }
+
+        // Load the quiz questions
+        async function loadQuiz() {
+            console.log("Fetching quiz questions...");
+            document.getElementById("quiz-container").innerHTML = "<p>Loading questions...</p>";
+
+            try {
+                const response = await fetch("/get_quiz");
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                questions = await response.json();
+                console.log("Received questions:", questions);
+
+                // Limit the number of questions based on user input
+                questions = questions.slice(0, numberOfQuestions);
+
+                displayQuestions();
+
+                document.getElementById("restart-btn").disabled = true;
+                quizSubmitted = false;
+
+            } catch (error) {
+                console.error("Error loading quiz:", error);
+                document.getElementById("quiz-container").innerHTML = "<p>Failed to load quiz. Please try again.</p>";
+            }
+        }
+
+        // Display questions in the quiz container
+        function displayQuestions() {
+            let html = "";
+            questions.forEach((q, index) => {
+                html += `<div class="quiz-question">
+                            <p>${index + 1}. ${q.question}</p>
+                            <div class="quiz-options">
+                                ${q.options.map(opt => `
+                                    <label class="option" id="label-${index}-${opt.charAt(0)}">
+                                        <input type="radio" name="q${index}" value="${opt.charAt(0)}" onclick="highlightSelected(${index}, '${opt.charAt(0)}')">
+                                        ${opt}
+                                    </label>
+                                `).join('')}
+                            </div>
+                            <p id="result-${index}" class="result"></p>
+                        </div>`;
+            });
+            document.getElementById("quiz-container").innerHTML = html;
+        }
+
+        // Highlight the selected option
+        function highlightSelected(index, selectedValue) {
+            document.querySelectorAll(`input[name="q${index}"]`).forEach((input) => {
+                let label = document.getElementById(`label-${index}-${input.value}`);
+                label.style.backgroundColor = (input.value === selectedValue) ? "#d0eaff" : "#e9ecef";
+            });
+        }
+
+        // Check answers and highlight correct/incorrect
+        function submitQuiz() {
+            if (quizSubmitted) return;
+            quizSubmitted = true;
+
+            let score = 0;
+
+            questions.forEach((q, index) => {
+                const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                const resultElement = document.getElementById(`result-${index}`);
+
+                if (selected) {
+                    let selectedLabel = document.getElementById(`label-${index}-${selected.value}`);
+                    let correctLabel = document.getElementById(`label-${index}-${q.correct_answer}`);
+
+                    if (selected.value === q.correct_answer) {
+                        score++;
+                        resultElement.innerHTML = `<span style="color: green;">✅ Correct</span>`;
+                        selectedLabel.classList.add("correct");
+                    } else {
+                        resultElement.innerHTML = `<span style="color: red;">❌ Wrong. Correct: ${q.correct_answer}</span>`;
+                        selectedLabel.classList.add("wrong");
+                        correctLabel.classList.add("correct");
+                    }
+                } else {
+                    resultElement.innerHTML = `<span style="color: red;">⚠️ Not answered. Correct: ${q.correct_answer}</span>`;
+                    let correctLabel = document.getElementById(`label-${index}-${q.correct_answer}`);
+                    correctLabel.classList.add("correct");
+                }
+            });
+
+            let scoreText = `Your Score: ${score} / ${questions.length}`;
+            let scoreElement = document.getElementById("score");
+
+            if (score === questions.length) {
+                scoreElement.innerHTML = `🏆 <span style="color: green;">Perfect Score! ${scoreText}</span>`;
+            } else if (score >= (questions.length * 0.7)) {
+                scoreElement.innerHTML = `😊 <span style="color: blue;">Great Job! ${scoreText}</span>`;
+            } else if (score >= (questions.length * 0.4)) {
+                scoreElement.innerHTML = `😐 <span style="color: orange;">Keep Practicing! ${scoreText}</span>`;
+            } else {
+                scoreElement.innerHTML = `😞 <span style="color: red;">Try Again! ${scoreText}</span>`;
+            }
+
+            document.getElementById("restart-btn").disabled = false;
+        }
+
+        // Restart Quiz - Only works after submitting
+        function restartQuiz() {
+            if (!quizSubmitted) return;
+            document.getElementById("quiz-container").innerHTML = "<p>Restarting quiz...</p>";
+            document.getElementById("score").innerHTML = "";
+            loadQuiz();
+        }
+
+        // Start the quiz by asking for the number of questions
+        askNumberOfQuestions();
+    </script>

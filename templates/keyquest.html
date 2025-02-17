@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programming Concepts</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+            position: relative;
+        }
+
+        select {
+            margin: 10px;
+            padding: 8px;
+            font-size: 14px;
+        }
+
+        #contentDisplay {
+            margin-top: 20px;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        /* Header styling */
+        .header {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 20px;
+            background-color: #2c3e50;
+            color: white;
+            z-index: 10;
+        }
+
+        .website-name {
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .website-name:hover {
+            color: #ff6ec7;
+        }
+
+        .account {
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .account i {
+            margin-right: 8px;
+        }
+
+        .account:hover {
+            color: #ff6ec7;
+        }
+
+        /* Main content styling */
+        .content {
+            margin-top: 80px; /* Add margin to avoid content being hidden behind the header */
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Header with Website Name and Account -->
+    <div class="header">
+        <div class="website-name" onclick="openWebsite()">
+            AI-powered Interview
+        </div>
+        <div class="account" onclick="openAccount()">
+            <i class="fas fa-user"></i>Account
+        </div>
+    </div>
+
+    <div class="content">
+        <h1>Programming Concepts</h1>
+
+        <label for="languageSelect">Select Language:</label>
+        <select id="languageSelect">
+            <option value="">Select Language</option>
+            <option value="C">C</option>
+            <option value="Java">Java</option>
+            <option value="Python">Python</option>
+            <option value="MachineLearning">Machine Learning</option>
+        </select>
+
+        <label for="conceptSelect">Select a Concept:</label>
+        <select id="conceptSelect">
+            <option value="">Select a Concept</option>
+        </select>
+
+        <label for="questionSelect">Select a Question:</label>
+        <select id="questionSelect">
+            <option value="">Select a Question</option>
+        </select>
+
+        <div id="contentDisplay" style="display:none;">
+            <h2 id="contentTitle"></h2>
+            <p id="contentText"></p>
+            <button id="moreDetailsBtn" style="display:none;">More Details</button>
+            <ul id="questionList"></ul>
+        </div>
+    </div>
+    <script>
+        // Data for programming concepts, explanations, and interview questions
+        const data = {
+            C: {
+                concepts: [
+                    "Basic Syntax & Data Types",
+                    "Control Flow",  
+                    "Functions & Recursion",
+                    "Pointers & Memory Management",
+                    "Structures & Unions",
+                    "File Handling",
+                    "Multithreading"
+                ],
+                details: {
+                    "Basic Syntax & Data Types": "In C, the basic syntax involves defining variables and constants with data types such as int (for integers), float (for decimal numbers), char (for characters), etc. Operators like +, -, *, and / allow mathematical operations. Understanding these fundamentals is key to writing C programs.",
+                    "Control Flow": "C provides powerful control structures such as if-else, loops (for, while, do-while), and switch-case. These control structures allow the programmer to make decisions and repeat actions, which are fundamental to program logic.",
+                    "Functions & Recursion": "Functions in C allow the code to be organized into reusable blocks. Recursion is a technique where a function calls itself to solve problems that can be broken down into smaller sub-problems.",
+                    "Pointers & Memory Management": "Pointers are variables that store the memory address of other variables. This concept is important for managing memory in programs. Functions like malloc() and free() are used for dynamic memory allocation.",
+                    "Structures & Unions": "Structures are used to group variables of different data types under one name. Unions, on the other hand, allow different variables to share the same memory location.",
+                    "File Handling": "C provides functions like fopen(), fclose(), fread(), and fwrite() for managing file input and output. Understanding file handling is essential for interacting with external data in your programs.",
+                    "Multithreading": "Multithreading in C allows the execution of multiple tasks simultaneously. POSIX Threads (pthreads) are used to create and manage threads for parallel processing, which improves program efficiency."
+                },
+                questions: {
+                    "Basic Syntax & Data Types": [
+                        "What are the basic data types in C and their sizes?",
+                        "Explain the use of the 'const' keyword in C.",
+                        "How do you declare and initialize a variable in C?",
+                        "What is the difference between a signed and unsigned integer?",
+                        "How do you convert a string to an integer in C?",
+                        "What is typecasting, and why is it used in C?",
+                        "Explain the concept of operators in C.",
+                        "What are the differences between arithmetic operators and bitwise operators?",
+                        "What is the sizeof operator used for?",
+                        "How do you declare an array in C?"
+                    ],
+                    "Control Flow": [
+                        "Explain the syntax of an 'if-else' statement.",
+                        "What is the difference between a 'for' loop and a 'while' loop?",
+                        "How does a 'do-while' loop work?",
+                        "What is the 'switch-case' statement and when would you use it?",
+                        "How can you break out of a loop in C?",
+                        "What does the 'continue' keyword do in a loop?",
+                        "Explain the use of the 'goto' statement.",
+                        "How do you implement nested loops in C?",
+                        "What are the potential pitfalls of using control flow in C?",
+                        "What are logical operators in C?"
+                    ],
+                    "Pointers & Memory Management": [
+                        "What is a pointer in C, and how does it work?",
+                        "Explain the difference between 'malloc()' and 'calloc()'.",
+                        "How do you free dynamically allocated memory in C?",
+                        "What is a dangling pointer, and how can you avoid it?",
+                        "Explain the concept of a memory leak in C.",
+                        "How does C handle memory allocation for arrays?",
+                        "What is pointer arithmetic?",
+                        "What is the difference between pass-by-value and pass-by-reference in C?",
+                        "How do you implement dynamic memory allocation in C?",
+                        "What is the role of 'free()' function in memory management?"
+                    ]
+                }
+            },
+            Java: {
+                concepts: [
+                    "OOP Concepts",
+                    "Exception Handling",
+                    "Collections Framework",
+                    "Multithreading",
+                    "JVM & Memory Management",
+                    "Spring Framework"
+                ],
+                details: {
+                    "OOP Concepts": "Java is an object-oriented programming (OOP) language. The core principles include classes, objects, inheritance, polymorphism, encapsulation, and abstraction. These concepts enable you to model real-world problems and create reusable code.",
+                    "Exception Handling": "Java has a robust exception handling system. Errors in Java are handled using try-catch-finally blocks. You can also throw exceptions manually with the 'throw' keyword, and declare methods that may throw exceptions using the 'throws' keyword.",
+                    "Collections Framework": "The Collections Framework in Java provides a set of interfaces and classes for storing and manipulating groups of objects. It includes data structures such as List, Set, Map, and Queue, offering great flexibility and performance.",
+                    "Multithreading": "Multithreading in Java allows the concurrent execution of multiple tasks. The Thread class and Runnable interface are used to manage threads, and synchronization ensures thread safety.",
+                    "JVM & Memory Management": "The Java Virtual Machine (JVM) runs Java applications and manages memory through garbage collection. Java’s memory management system ensures that unused objects are automatically cleaned up.",
+                    "Spring Framework": "Spring is an open-source framework for building Java-based enterprise applications. It simplifies development by providing comprehensive infrastructure support, such as dependency injection and aspect-oriented programming."
+                },
+                questions: {
+                    "OOP Concepts": [
+                        "What are the four pillars of object-oriented programming?",
+                        "How does Java handle multiple inheritance?",
+                        "What is the difference between 'this' and 'super' in Java?",
+                        "Explain the concept of polymorphism with an example.",
+                        "What is encapsulation, and why is it important?",
+                        "What is abstraction in Java?",
+                        "How does inheritance work in Java?",
+                        "What is method overriding in Java?",
+                        "What is the difference between an abstract class and an interface in Java?",
+                        "What is the role of the 'final' keyword in OOP?"
+                    ],
+                    "Exception Handling": [
+                        "What is the difference between 'checked' and 'unchecked' exceptions?",
+                        "What is the purpose of the 'throws' keyword in Java?",
+                        "How do you create a custom exception class in Java?",
+                        "What is the role of the 'finally' block in exception handling?",
+                        "How does Java handle exceptions in a multithreading environment?",
+                        "What is the difference between 'throw' and 'throws'?",
+                        "What happens if you don't catch an exception?",
+                        "What are runtime exceptions in Java?",
+                        "How do you propagate exceptions in Java?",
+                        "Explain the hierarchy of exceptions in Java."
+                    ]
+                }
+            },
+            Python: {
+                concepts: [
+                    "Data Types & Structures",
+                    "OOP in Python",
+                    "File Handling",
+                    "Decorators & Generators",
+                    "Multithreading & Multiprocessing",
+                    "Popular Libraries"
+                ],
+                details: {
+                    "Data Types & Structures": "Python has built-in data types like List, Tuple, Dictionary, and Set. Lists are ordered collections, Tuples are immutable, Dictionaries store key-value pairs, and Sets are unordered collections of unique elements.",
+                    "OOP in Python": "Python supports object-oriented programming, enabling you to create classes, instantiate objects, and use inheritance, polymorphism, and encapsulation.",
+                    "File Handling": "Python provides easy methods for file handling. You can open files with the 'open()' function, read or write to them, and close them with 'close()'. Python also supports working with both text and binary files.",
+                    "Decorators & Generators": "Decorators are functions that modify the behavior of other functions. Generators are a way of creating iterators without storing the entire sequence in memory.",
+                    "Multithreading & Multiprocessing": "Python supports both multithreading and multiprocessing. While multithreading is suited for I/O-bound tasks, multiprocessing is used for CPU-bound tasks.",
+                    "Popular Libraries": "Libraries like NumPy, Pandas, Matplotlib, and TensorFlow are widely used in Python for data analysis, visualization, and machine learning."
+                },
+                questions: {
+                    "Data Types & Structures": [
+                        "What are the built-in data types in Python?",
+                        "How do you define a list and a tuple in Python?",
+                        "What is the difference between a list and a set?",
+                        "How can you remove elements from a List?",
+                        "Explain list comprehensions in Python.",
+                        "What is the purpose of the 'del' statement?",
+                        "How do you iterate through a dictionary in Python?",
+                        "What is the difference between 'deepcopy' and 'shallow copy'?",
+                        "How do you handle missing keys in a dictionary?",
+                        "What are the advantages of using a Tuple over a List?"
+                    ]
+                }
+            }
+        };
+
+        // JavaScript logic to update the content based on selected language, concept, and question
+        const languageSelect = document.getElementById('languageSelect');
+        const conceptSelect = document.getElementById('conceptSelect');
+        const questionSelect = document.getElementById('questionSelect');
+        const contentDisplay = document.getElementById('contentDisplay');
+        const contentTitle = document.getElementById('contentTitle');
+        const contentText = document.getElementById('contentText');
+        const questionList = document.getElementById('questionList');
+        const moreDetailsBtn = document.getElementById('moreDetailsBtn');
+
+        languageSelect.addEventListener('change', function() {
+            const selectedLanguage = languageSelect.value;
+            conceptSelect.innerHTML = '<option value="">Select a Concept</option>'; // Reset concept dropdown
+            questionSelect.innerHTML = '<option value="">Select a Question</option>'; // Reset question dropdown
+
+            if (selectedLanguage) {
+                const concepts = data[selectedLanguage].concepts;
+                concepts.forEach(concept => {
+                    const option = document.createElement('option');
+                    option.value = concept;
+                    option.textContent = concept;
+                    conceptSelect.appendChild(option);
+                });
+            }
+        });
+
+        conceptSelect.addEventListener('change', function() {
+            const selectedLanguage = languageSelect.value;
+            const selectedConcept = conceptSelect.value;
+
+            if (selectedLanguage && selectedConcept) {
+                contentDisplay.style.display = 'block';
+                contentTitle.textContent = selectedConcept;
+                contentText.textContent = data[selectedLanguage].details[selectedConcept];
+                questionList.innerHTML = '';
+
+                data[selectedLanguage].questions[selectedConcept].forEach(question => {
+                    const li = document.createElement('li');
+                    li.textContent = question;
+                    questionList.appendChild(li);
+                });
+
+                // Populate the question dropdown
+                questionSelect.innerHTML = '<option value="">Select a Question</option>';
+                data[selectedLanguage].questions[selectedConcept].forEach((question, index) => {
+                    const option = document.createElement('option');
+                    option.value = index;
+                    option.textContent = question;
+                    questionSelect.appendChild(option);
+                });
+
+                moreDetailsBtn.style.display = 'block';
+            } else {
+                contentDisplay.style.display = 'none';
+            }
+        });
+
+        questionSelect.addEventListener('change', function() {
+            const selectedLanguage = languageSelect.value;
+            const selectedConcept = conceptSelect.value;
+            const selectedQuestionIndex = questionSelect.value;
+
+            if (selectedQuestionIndex !== "") {
+                const selectedQuestion = data[selectedLanguage].questions[selectedConcept][selectedQuestionIndex];
+                alert("Selected Question: " + selectedQuestion);
+            }
+        });
+
+    </script>
+</body>
+</html>
